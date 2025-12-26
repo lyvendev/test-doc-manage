@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage - Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #773bef;
+            --primary-light: #905cf7;
+            --primary-glow: rgba(119, 59, 239, 0.2);
+            --bg: #0a0a0f;
+            --surface: #13131a;
+            --surface-light: #1a1a24;
+            --text: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(119, 59, 239, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND --- */
+        .bg-wrapper { position: fixed; inset: 0; z-index: -1; background: var(--bg); }
+        .bg-grid {
+            position: absolute; inset: 0;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px; opacity: 0.1;
+        }
+        .bg-gradient {
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 80% 0%, var(--primary-glow), transparent 40%),
+                        radial-gradient(circle at 20% 50%, rgba(119, 59, 239, 0.05), transparent 40%);
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.85);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-container {
+            max-width: 1400px; margin: 0 auto;
+            padding: 0.8rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 800; color: var(--text); text-decoration: none; }
+        .logo img { width: 42px; height: 42px; border-radius: 12px; box-shadow: 0 0 15px var(--primary-glow); }
+
+        .btn-invite-top {
+            background: var(--primary); color: white; padding: 0.7rem 1.4rem;
+            border-radius: 10px; text-decoration: none; font-weight: 600;
+            transition: all 0.3s ease; font-size: 0.9rem;
+        }
+        .btn-invite-top:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--primary-glow); background: var(--primary-light); }
+
+        /* --- LAYOUT --- */
+        .doc-layout {
+            display: grid; grid-template-columns: 280px 1fr;
+            max-width: 1400px; margin: 80px auto 0;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            padding: 2.5rem 1.5rem; height: calc(100vh - 80px);
+            position: sticky; top: 80px; overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+        .nav-group { margin-bottom: 2.5rem; }
+        .nav-group-title {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--primary); font-weight: 800; margin-bottom: 1.2rem; opacity: 0.8;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 0.8rem 1rem; margin-bottom: 0.4rem;
+            border-radius: 12px; color: var(--text-muted);
+            text-decoration: none; transition: 0.3s; font-weight: 500; font-size: 0.95rem;
+        }
+        .nav-item:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+        .nav-item.active { background: rgba(119, 59, 239, 0.1); color: var(--primary-light); font-weight: 600; }
+
+        /* --- CONTENT --- */
+        .content-area { padding: 3rem 5rem; max-width: 1000px; }
+        .doc-section { display: none; animation: fadeIn 0.4s ease-out; }
+        .doc-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .version-badge {
+            background: rgba(119, 59, 239, 0.1); border: 1px solid var(--border);
+            color: var(--primary-light); padding: 5px 15px; border-radius: 30px;
+            font-size: 0.75rem; font-weight: 700; display: inline-block; margin-bottom: 1.5rem;
+        }
+
+        h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        h2 { font-size: 1.8rem; margin: 3rem 0 1.2rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.3rem; margin: 2rem 0 1rem; color: var(--primary-light); }
+        p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(119, 59, 239, 0.05) 0%, rgba(119, 59, 239, 0.01) 100%);
+            border: 1px solid var(--border); padding: 1.8rem; border-radius: 20px; margin: 2.5rem 0;
+        }
+
+        .code-inline {
+            background: #1e1e2e; padding: 4px 10px; border-radius: 8px;
+            font-family: 'Courier New', monospace; color: var(--primary-light); font-weight: 600; font-size: 0.95rem;
+        }
+
+        .category-img {
+            max-width: 100%; border-radius: 12px; border: 1px solid var(--border);
+            margin: 1.5rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        ul { list-style: none; margin: 1.5rem 0; }
+        li { margin-bottom: 1.2rem; display: flex; align-items: flex-start; gap: 15px; color: var(--text-muted); }
+        .bullet { 
+            min-width: 32px; height: 32px; background: rgba(119, 59, 239, 0.15); 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: var(--primary-light); font-weight: bold;
+        }
+
+        hr { border: 0; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+        @media (max-width: 1100px) {
+            .doc-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .content-area { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-wrapper">
+    <div class="bg-grid"></div>
+    <div class="bg-gradient"></div>
+</div>
+
+<nav>
+    <div class="nav-container">
+        <a href="#" class="logo">
+            <img src="https://i.postimg.cc/x8kQQ2fq/Manage-2-0.png" alt="Manage Logo">
+            Manage
+        </a>
+        <a href="#" class="btn-invite-top">Inviter le Bot</a>
+    </div>
+</nav>
+
+<div class="doc-layout">
+    <aside class="sidebar">
+        <div class="nav-group">
+            <div class="nav-group-title">Démarrage</div>
+            <a href="#" class="nav-item active" onclick="showSec('intro', this)">📘 Lisez-moi</a>
+            <a href="#" class="nav-item" onclick="showSec('install', this)">🛠️ Installation</a>
+            <a href="#" class="nav-item" onclick="showSec('news', this)">✨ Nouveautés</a>
+        </div>
+        
+        <div class="nav-group">
+            <div class="nav-group-title">Catégories</div>
+            <a href="#" class="nav-item" onclick="showSec('gen', this)">⚙️ Général</a>
+            <a href="#" class="nav-item" onclick="showSec('inf', this)">♾️ Infini</a>
+            <a href="#" class="nav-item" onclick="showSec('wel', this)">👋 Bienvenue</a>
+            <a href="#" class="nav-item" onclick="showSec('eco', this)">💰 Économie & Boutique</a>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        
+        <section id="intro" class="doc-section active">
+            <div class="version-badge">VERSION 1.5</div>
+            <h1>📘 Lisez-moi</h1>
+            <p>Cette documentation a pour objectif de vous présenter <strong>Manage</strong> et de vous guider dans sa prise en main.</p>
+            <p>Vous y trouverez toutes les informations nécessaires pour configurer et utiliser le bot correctement sur votre serveur Discord.</p>
+            <div class="info-card">Si vous avez des questions, des suggestions ou besoin d’assistance, notre équipe de support est disponible pour vous accompagner.</div>
+            
+            <h2>🚀 Démarrer avec Manage</h2>
+            <p>Pour commencer à utiliser Manage, invitez le bot sur votre serveur via le bouton en haut à droite.</p>
+            
+            <hr>
+            
+            <h2>📚 Documentation & catégories</h2>
+            <p>Pour plus d’informations sur les différentes catégories disponibles dans la commande <span class="code-inline">/config</span>, consultez la documentation correspondante :</p>
+            
+            <div class="grid-links">
+                <a href="#" onclick="showSec('gen')" class="link-card">⚙️ Général</a>
+                <a href="#" onclick="showSec('inf')" class="link-card">♾️ Infini</a>
+                <a href="#" onclick="showSec('wel')" class="link-card">👋 Bienvenue</a>
+                <a href="#" onclick="showSec('eco')" class="link-card">💰 Économie</a>
+            </div>
+        </section>
+
+        <section id="install" class="doc-section">
+            <div class="version-badge">VERSION 1.5</div>
+            <h1>🛠️ Installation de Manage</h1>
+            <p><strong>Manage</strong> est conçu pour faciliter la gestion et l’automatisation de votre serveur Discord. Son système de configuration guidée vous permet de paramétrer le bot rapidement tout en gardant un contrôle total sur chaque fonctionnalité.</p>
+            <p>Aucune connaissance technique avancée n’est requise : toutes les étapes sont claires et interactives.</p>
+
+            <hr>
+
+            <h2>📦 Configuration initiale</h2>
+            <p>La commande <span class="code-inline">/config</span> est la commande principale pour configurer <strong>Manage</strong>. Elle vous permet d’accéder à l’ensemble des paramètres du bot via une interface intuitive.</p>
+            <p>Grâce à cette commande, vous pouvez activer, désactiver et personnaliser chaque fonctionnalité selon les besoins de votre serveur.</p>
+
+            <hr>
+
+            <h2>⚙️ Procédure de configuration</h2>
+            <h3>Étapes à suivre :</h3>
+            <ul>
+                <li><div class="bullet">1</div> <div>Exécutez la commande <span class="code-inline">/config</span></div></li>
+                <li><div class="bullet">2</div> <div>Sélectionnez la catégorie que vous souhaitez configurer</div></li>
+                <li><div class="bullet">3</div> <div>Suivez les instructions affichées par le bot</div></li>
+                <li><div class="bullet">4</div> <div>Ajustez les paramètres selon vos préférences</div></li>
+                <li><div class="bullet">5</div> <div>Validez vos choix pour appliquer les modifications</div></li>
+            </ul>
+            <div class="info-card">À chaque étape, <strong>Manage vous fournit des indications claires</strong> afin de vous guider efficacement.</div>
+
+            <hr>
+
+            <h2>🔄 Gestion et modifications</h2>
+            <p>La configuration de <strong>Manage</strong> n’est pas définitive. Vous pouvez modifier vos paramètres <strong>à tout moment</strong> en relançant la commande <span class="code-inline">/config</span>, sans risque pour votre serveur.</p>
+
+            <hr>
+
+            <h2>📚 Organisation par catégories</h2>
+            <p>La commande <span class="code-inline">/config</span> est structurée en plusieurs catégories afin de rendre la configuration plus lisible :</p>
+            
+            <img src="https://i.postimg.cc/rpXnfL0b/Capture-d-ecran-2025-12-26-144422.png" alt="Catégories Manage" class="category-img">
+            
+            <p>Chaque catégorie regroupe des options spécifiques, vous permettant une configuration précise et adaptée à votre communauté.</p>
+        </section>
+
+        <section id="news" class="doc-section">
+            <div class="version-badge">MISE À JOUR 1.5</div>
+            <img src="https://i.postimg.cc/X7Fs1ctV/Design-sans-titre-3.png" alt="Update Image" class="category-img">
+            
+            <h1>✨ Nouveautés - Version 1.5</h1>
+            <p>Salut à tous, la <strong>version 1.5</strong> de Manage est désormais disponible !</p>
+
+            <h2>💰 Money Update</h2>
+            <p>Cette mise à jour majeure introduit un tout <strong>nouveau système d’économie</strong>, accompagné de plusieurs fonctionnalités inédites.</p>
+
+            <h3>🪙 Système d’économie</h3>
+            <p>Le système d’économie fait officiellement son arrivée. Pour le configurer, utilisez la commande <span class="code-inline">/config</span>.</p>
+            <div class="step-box">
+                <ul style="margin: 0;">
+                    <li><div class="bullet">✓</div> Nom de la monnaie du serveur</li>
+                    <li><div class="bullet">✓</div> Icône de la monnaie</li>
+                    <li><div class="bullet">✓</div> Gain de la commande /journalier</li>
+                    <li><div class="bullet">✓</div> Gain par message</li>
+                    <li><div class="bullet">✓</div> Gain par minute en vocal</li>
+                </ul>
+            </div>
+
+            <h3>🛍️ Système de boutique</h3>
+            <p>Grâce au système d’économie, une <strong>boutique</strong> est maintenant disponible. Configuration via <span class="code-inline">/config</span> → catégorie <strong>Boutique</strong>.</p>
+
+            <h3>🎰 Casino</h3>
+            <p>Le <strong>casino</strong> fait également son apparition ! Pour le moment, deux jeux sont disponibles : <strong>Machine à sous</strong> et <strong>Blackjack</strong>.</p>
+
+            <hr>
+
+            <h2>⌨️ Nouvelles commandes</h2>
+            <h3>Économie</h3>
+            <ul>
+                <li><div class="bullet">💵</div> <div><span class="code-inline">/ajouter-money</span> : Ajouter de l’argent (Admin)</div></li>
+                <li><div class="bullet">💸</div> <div><span class="code-inline">/retirer-money</span> : Retirer de l’argent (Admin)</div></li>
+                <li><div class="bullet">💳</div> <div><span class="code-inline">/solde</span> : Consulter votre solde</div></li>
+                <li><div class="bullet">📅</div> <div><span class="code-inline">/journalier</span> : Recevoir votre paye quotidienne</div></li>
+                <li><div class="bullet">🛒</div> <div><span class="code-inline">/boutique</span> : Accéder à la boutique</div></li>
+            </ul>
+
+            <h3>Casino</h3>
+            <ul>
+                <li><div class="bullet">🎰</div> <div><span class="code-inline">/slots</span> : Jouer à la machine à sous</div></li>
+                <li><div class="bullet">🃏</div> <div><span class="code-inline">/blackjack</span> : Jouer au blackjack</div></li>
+            </ul>
+
+            <hr>
+
+            <h2>🗑️ Suppressions</h2>
+            <p>Suppression des catégories <strong>Giveaway</strong> et <strong>Logs</strong> dans la commande <span class="code-inline">/config</span>.</p>
+
+            <hr>
+
+            <h2>👨‍💻 Nouvel arrivant</h2>
+            <p>Nous souhaitons la bienvenue à notre nouveau développeur au sein de l'équipe !</p>
+
+            <hr>
+
+            <h2>ℹ️ Information importante</h2>
+            <div class="info-card">
+                Nous sommes conscients que, sur certains serveurs, le système <strong>infini</strong> peut rencontrer des dysfonctionnements. L’équipe travaille activement à la correction de ce problème.
+            </div>
+
+            <p style="text-align: center; margin-top: 3rem; font-weight: 700; color: var(--primary-light);">Merci à tous pour votre compréhension et bon jeu au casino !<br>— L’équipe Manage</p>
+        </section>
+
+        <section id="gen" class="doc-section"><h1>⚙️ Général</h1><p>Contenu à venir...</p></section>
+        <section id="inf" class="doc-section"><h1>♾️ Infini</h1><p>Contenu à venir...</p></section>
+        <section id="wel" class="doc-section"><h1>👋 Bienvenue</h1><p>Contenu à venir...</p></section>
+        <section id="eco" class="doc-section"><h1>💰 Économie & Boutique</h1><p>Contenu à venir...</p></section>
+
+    </main>
+</div>
+
+<script>
+    function showSec(id, el) {
+        document.querySelectorAll('.doc-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(el) el.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
